@@ -118,11 +118,9 @@ export default function Markets() {
               <XAxis type="number" tick={{ fill: "hsl(218 14% 38%)", fontSize: 11, fontFamily: "IBM Plex Mono" }} axisLine={false} tickLine={false} tickFormatter={v => `${v}%`} />
               <YAxis type="category" dataKey="sector" tick={{ fill: "hsl(218 14% 38%)", fontSize: 11, fontFamily: "IBM Plex Mono" }} axisLine={false} tickLine={false} width={110} />
               <Tooltip contentStyle={chartStyle} formatter={(v: number) => [`${v.toFixed(2)}%`, "Performance"]} />
-              <Bar dataKey="perf" radius={[0, 4, 4, 0]}>
-                {sectorPerf.map((entry, i) => (
-                  <Bar key={i} dataKey="perf" fill={entry.perf >= 0 ? "hsl(162 67% 48%)" : "hsl(354 72% 60%)"} />
-                ))}
-              </Bar>
+              {sectorPerf.map((entry, i) => (
+                <Bar key={i} dataKey="perf" fill={entry.perf >= 0 ? "hsl(162 67% 48%)" : "hsl(354 72% 60%)"} radius={[0, 4, 4, 0]} />
+              ))}
             </BarChart>
           </ResponsiveContainer>
         </div>
