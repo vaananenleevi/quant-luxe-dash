@@ -5,6 +5,7 @@ import {
 } from "recharts";
 import { ArrowLeft, Building2, Users, MapPin, Globe } from "lucide-react";
 import { getStockByTicker, allStocks } from "@/data/stocks";
+import { useLiveQuote } from "@/hooks/use-live-quotes";
 
 const timeRanges = ["1D", "1W", "1M", "1Y", "5Y"] as const;
 
