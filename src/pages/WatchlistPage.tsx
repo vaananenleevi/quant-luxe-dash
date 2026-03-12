@@ -82,7 +82,17 @@ export default function WatchlistPage() {
   return (
     <div className="space-y-5">
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-sans font-semibold text-foreground">Extended Watchlist</h1>
+        <div className="flex items-center gap-3">
+          <h1 className="text-xl font-sans font-semibold text-foreground">Extended Watchlist</h1>
+          {liveData?.fetchedAt && (
+            <span className="text-[10px] font-mono text-positive bg-positive/10 px-2 py-0.5 rounded">
+              LIVE · {new Date(liveData.fetchedAt).toLocaleTimeString()}
+            </span>
+          )}
+          {liveLoading && (
+            <span className="text-[10px] font-mono text-muted-foreground animate-pulse">Loading live data...</span>
+          )}
+        </div>
         <span className="text-xs font-mono text-muted-foreground">{filtered.length} companies</span>
       </div>
 
