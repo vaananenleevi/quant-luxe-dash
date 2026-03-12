@@ -34,7 +34,7 @@ const Index = () => {
       </div>
 
       <footer className="border-t border-border pt-6 pb-8 flex items-center justify-between text-xs font-sans text-muted-foreground">
-        <span>Meridian · Market data is simulated for educational purposes</span>
+        <span>Meridian · Live market data powered by Finnhub</span>
         <span className="font-mono">v2.0.0</span>
       </footer>
     </div>
