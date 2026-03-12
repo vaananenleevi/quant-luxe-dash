@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { allStocks, themeCategories, coreHoldingTickers } from "@/data/stocks";
+import { useLiveQuotes } from "@/hooks/use-live-quotes";
 import { MiniChart } from "@/components/dashboard/MiniChart";
 
 type FilterType = "theme" | "geography" | "marketCap";
@@ -35,8 +36,17 @@ export default function WatchlistPage() {
   const [sortKey, setSortKey] = useState<SortKey>("marketCap");
   const [sortDir, setSortDir] = useState<SortDir>("desc");
 
+  const allTickers = useMemo(() => allStocks.map(s => s.ticker), []);
+  const { data: liveData, isLoading: liveLoading } = useLiveQuotes(allTickers);
+
   const filtered = useMemo(() => {
-    let list = allStocks;
+    let list = allStocks.map(stock => {
+      const live = liveData?.quotes?.[stock.ticker];
+      if (live && live.price > 0) {
+        return { ...stock, price: live.price, change: live.change, changePercent: live.changePercent };
+      }
+      return stock;
+    });
     if (activeTheme === "My Core Holdings") {
       list = list.filter(s => coreHoldingTickers.includes(s.ticker));
     } else if (activeTheme !== "All") {
@@ -60,7 +70,7 @@ export default function WatchlistPage() {
       return sortDir === "asc" ? av - bv : bv - av;
     });
     return sorted;
-  }, [activeTheme, activeMcap, sortKey, sortDir]);
+  }, [activeTheme, activeMcap, sortKey, sortDir, liveData]);
 
   function toggleSort(key: SortKey) {
     if (sortKey === key) setSortDir(d => d === "asc" ? "desc" : "asc");
@@ -72,7 +82,17 @@ export default function WatchlistPage() {
   return (
     <div className="space-y-5">
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-sans font-semibold text-foreground">Extended Watchlist</h1>
+        <div className="flex items-center gap-3">
+          <h1 className="text-xl font-sans font-semibold text-foreground">Extended Watchlist</h1>
+          {liveData?.fetchedAt && (
+            <span className="text-[10px] font-mono text-positive bg-positive/10 px-2 py-0.5 rounded">
+              LIVE · {new Date(liveData.fetchedAt).toLocaleTimeString()}
+            </span>
+          )}
+          {liveLoading && (
+            <span className="text-[10px] font-mono text-muted-foreground animate-pulse">Loading live data...</span>
+          )}
+        </div>
         <span className="text-xs font-mono text-muted-foreground">{filtered.length} companies</span>
       </div>
 

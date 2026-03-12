@@ -5,6 +5,7 @@ import {
 } from "recharts";
 import { ArrowLeft, Building2, Users, MapPin, Globe } from "lucide-react";
 import { getStockByTicker, allStocks } from "@/data/stocks";
+import { useLiveQuote } from "@/hooks/use-live-quotes";
 
 const timeRanges = ["1D", "1W", "1M", "1Y", "5Y"] as const;
 
@@ -53,6 +54,7 @@ const generateMarginData = () => {
 export default function StockDetail() {
   const { ticker } = useParams<{ ticker: string }>();
   const [activeRange, setActiveRange] = useState<string>("1Y");
+  const { quote: liveQuote, fetchedAt } = useLiveQuote(ticker || "");
 
   const stock = getStockByTicker(ticker || "");
 
@@ -69,7 +71,11 @@ export default function StockDetail() {
     );
   }
 
-  const priceData = generatePriceData(stock.price, activeRange);
+  // Use live data if available
+  const displayPrice = liveQuote && liveQuote.price > 0 ? liveQuote.price : stock.price;
+  const displayChange = liveQuote && liveQuote.price > 0 ? liveQuote.changePercent : stock.changePercent;
+
+  const priceData = generatePriceData(displayPrice, activeRange);
   const revenueData = generateRevenueData();
   const marginData = generateMarginData();
 
@@ -105,11 +111,16 @@ export default function StockDetail() {
             <h1 className="font-mono text-2xl font-bold text-foreground">{stock.ticker}</h1>
             <span className="text-sm font-sans text-muted-foreground">{stock.name}</span>
             <span className="text-[10px] font-sans text-muted-foreground bg-secondary px-2 py-0.5 rounded">{stock.sector}</span>
+            {fetchedAt && (
+              <span className="text-[9px] font-mono text-positive bg-positive/10 px-1.5 py-0.5 rounded">
+                LIVE · {new Date(fetchedAt).toLocaleTimeString()}
+              </span>
+            )}
           </div>
           <div className="flex items-baseline gap-3">
-            <span className="font-mono text-3xl font-bold text-foreground">${stock.price.toFixed(2)}</span>
-            <span className={`font-mono text-sm ${stock.changePercent >= 0 ? "text-positive" : "text-negative"}`}>
-              {stock.changePercent >= 0 ? "+" : ""}{stock.changePercent.toFixed(2)}% today
+            <span className="font-mono text-3xl font-bold text-foreground">${displayPrice.toFixed(2)}</span>
+            <span className={`font-mono text-sm ${displayChange >= 0 ? "text-positive" : "text-negative"}`}>
+              {displayChange >= 0 ? "+" : ""}{displayChange.toFixed(2)}% today
             </span>
           </div>
         </div>

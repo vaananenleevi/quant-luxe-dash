@@ -1,1 +1,4 @@
 project_id = "abqorvxmehnzvschgdcv"
+
+[functions.stock-quotes]
+verify_jwt = false
