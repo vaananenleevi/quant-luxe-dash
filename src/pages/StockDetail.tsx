@@ -54,6 +54,7 @@ const generateMarginData = () => {
 export default function StockDetail() {
   const { ticker } = useParams<{ ticker: string }>();
   const [activeRange, setActiveRange] = useState<string>("1Y");
+  const { quote: liveQuote, fetchedAt } = useLiveQuote(ticker || "");
 
   const stock = getStockByTicker(ticker || "");
 
@@ -70,7 +71,11 @@ export default function StockDetail() {
     );
   }
 
-  const priceData = generatePriceData(stock.price, activeRange);
+  // Use live data if available
+  const displayPrice = liveQuote && liveQuote.price > 0 ? liveQuote.price : stock.price;
+  const displayChange = liveQuote && liveQuote.price > 0 ? liveQuote.changePercent : stock.changePercent;
+
+  const priceData = generatePriceData(displayPrice, activeRange);
   const revenueData = generateRevenueData();
   const marginData = generateMarginData();
 
