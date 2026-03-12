@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { allStocks, themeCategories, coreHoldingTickers } from "@/data/stocks";
+import { useLiveQuotes } from "@/hooks/use-live-quotes";
 import { MiniChart } from "@/components/dashboard/MiniChart";
 
 type FilterType = "theme" | "geography" | "marketCap";
