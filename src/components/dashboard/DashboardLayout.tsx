@@ -6,14 +6,13 @@ import {
   BarChart3,
   Star,
   Briefcase,
-  Newspaper,
-  Settings,
-  ChevronLeft,
-  ChevronRight,
+  CalendarDays,
   GitCompare,
   Search,
   Bell,
   User,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 
 const navItems = [
