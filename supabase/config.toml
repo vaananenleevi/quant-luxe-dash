@@ -2,3 +2,6 @@ project_id = "abqorvxmehnzvschgdcv"
 
 [functions.stock-quotes]
 verify_jwt = false
+
+[functions.earnings-calendar]
+verify_jwt = false

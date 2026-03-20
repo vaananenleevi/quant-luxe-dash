@@ -847,7 +847,7 @@ export const allStocks: StockData[] = [
     sparkline: [15, 15.5, 16, 16.5, 17, 17.2, 17.5, 17.8, 18, 18.1, 18.3, 18.4]
   }),
   s({
-    ticker: "CANATU", name: "Canatu Oy", price: 2.85, changePercent: 2.89,
+    ticker: "CANATU.HE", name: "Canatu Oy", price: 2.85, changePercent: 2.89,
     marketCap: "$45M", sector: "Semiconductors", theme: "Nordics / Finland",
     industry: "Carbon Nanomaterials", country: "Finland",
     pe: -1, forwardPe: -1, revenueGrowth: 45.2, beta: 1.85,
@@ -970,7 +970,7 @@ export const allStocks: StockData[] = [
     weeklyPercent: 1.2, ytdPercent: 8.5, yearPercent: 22.5,
   }),
   s({
-    ticker: "AIFORIA", name: "Aiforia Technologies", price: 1.42, changePercent: -5.33,
+    ticker: "AIFORIA.HE", name: "Aiforia Technologies", price: 1.42, changePercent: -5.33,
     marketCap: "$28M", sector: "Healthcare", theme: "Nordics / Finland",
     industry: "AI Pathology", country: "Finland",
     pe: -1, forwardPe: -1, revenueGrowth: 32.5, beta: 1.95,
@@ -989,7 +989,7 @@ export const allStocks: StockData[] = [
     weeklyPercent: -2.5, ytdPercent: -8.5, yearPercent: -18.2,
   }),
   s({
-    ticker: "EASOR", name: "Easor Oy", price: 0.85, changePercent: 2.41,
+    ticker: "EASOR.HE", name: "Easor Oy", price: 0.85, changePercent: 2.41,
     marketCap: "$12M", sector: "Energy", theme: "Nordics / Finland",
     industry: "Geothermal Energy Tech", country: "Finland",
     pe: -1, forwardPe: -1, beta: 2.15,
@@ -1044,30 +1044,33 @@ export interface PortfolioHolding {
   weight: number;
   sector: string;
   country: string;
-  assetType: "Stock" | "ETF" | "Crypto Exposure";
+  assetType: "Stock" | "ETF" | "Crypto Exposure" | "Cash";
 }
 
+
 export const portfolioHoldings: PortfolioHolding[] = [
-  { ticker: "CSPX", name: "iShares Core S&P 500 UCITS ETF", shares: 12, avgCost: 520.0, weight: 14.2, sector: "ETF", country: "US", assetType: "ETF" },
-  { ticker: "TSM", name: "TSMC", shares: 45, avgCost: 98.50, weight: 13.0, sector: "Semiconductors", country: "Taiwan", assetType: "Stock" },
-  { ticker: "ASML", name: "ASML Holding", shares: 8, avgCost: 680.0, weight: 15.9, sector: "Semiconductors", country: "Netherlands", assetType: "Stock" },
-  { ticker: "MSTR", name: "Strategy (Bitcoin)", shares: 3, avgCost: 1200.0, weight: 9.4, sector: "Crypto Exposure", country: "US", assetType: "Crypto Exposure" },
-  { ticker: "NVO", name: "Novo Nordisk", shares: 35, avgCost: 110.0, weight: 9.1, sector: "Healthcare", country: "Denmark", assetType: "Stock" },
-  { ticker: "AMZN", name: "Amazon", shares: 22, avgCost: 145.0, weight: 8.3, sector: "Big Tech", country: "US", assetType: "Stock" },
-  { ticker: "ADBE", name: "Adobe", shares: 6, avgCost: 420.0, weight: 5.8, sector: "Big Tech", country: "US", assetType: "Stock" },
-  { ticker: "BABA", name: "Alibaba", shares: 30, avgCost: 72.0, weight: 5.4, sector: "China Tech", country: "China", assetType: "Stock" },
-  { ticker: "AVGO", name: "Broadcom", shares: 2, avgCost: 1400.0, weight: 6.8, sector: "Semiconductors", country: "US", assetType: "Stock" },
-  { ticker: "DETEC.HE", name: "Detection Technology", shares: 120, avgCost: 14.50, weight: 4.5, sector: "Semiconductors", country: "Finland", assetType: "Stock" },
-  { ticker: "CANATU", name: "Canatu", shares: 800, avgCost: 2.20, weight: 4.6, sector: "Semiconductors", country: "Finland", assetType: "Stock" },
-  { ticker: "UNH", name: "UnitedHealth Group", shares: 4, avgCost: 480.0, weight: 4.3, sector: "Healthcare", country: "US", assetType: "Stock" },
-  { ticker: "QTCOM.HE", name: "Qt Group", shares: 30, avgCost: 52.0, weight: 4.2, sector: "AI / Software", country: "Finland", assetType: "Stock" },
-  { ticker: "UBER", name: "Uber", shares: 25, avgCost: 48.0, weight: 3.7, sector: "EV and Mobility", country: "US", assetType: "Stock" },
-  { ticker: "QTUM", name: "iShares Quantum Computing ETF", shares: 40, avgCost: 32.0, weight: 3.4, sector: "ETF", country: "US", assetType: "ETF" },
-  { ticker: "REG1V.HE", name: "Revenio Group", shares: 45, avgCost: 25.0, weight: 2.6, sector: "Healthcare", country: "Finland", assetType: "Stock" },
-  { ticker: "TNOM.HE", name: "Talenom", shares: 150, avgCost: 5.50, weight: 2.1, sector: "AI / Software", country: "Finland", assetType: "Stock" },
+  { ticker: "CSPX", name: "iShares Core S&P 500 UCITS ETF", shares: 12, avgCost: 520.0, weight: 10.1, sector: "ETF", country: "US", assetType: "ETF" },
+  { ticker: "TSM", name: "Taiwan Semiconductor ADR", shares: 20, avgCost: 98.50, weight: 9.4, sector: "Semiconductors", country: "Taiwan", assetType: "Stock" },
+  { ticker: "ASML", name: "ASML Holding", shares: 8, avgCost: 680.0, weight: 9.3, sector: "Semiconductors", country: "Netherlands", assetType: "Stock" },
+  { ticker: "MSTR", name: "Strategy / MicroStrategy", shares: 3, avgCost: 1200.0, weight: 7.8, sector: "Crypto Exposure", country: "US", assetType: "Crypto Exposure" },
+  { ticker: "AMZN", name: "Amazon", shares: 22, avgCost: 145.0, weight: 7.4, sector: "Big Tech", country: "US", assetType: "Stock" },
+  { ticker: "NVO", name: "Novo Nordisk", shares: 35, avgCost: 110.0, weight: 7.3, sector: "Healthcare", country: "Denmark", assetType: "Stock" },
+  { ticker: "ADBE", name: "Adobe", shares: 6, avgCost: 420.0, weight: 6.2, sector: "Big Tech", country: "US", assetType: "Stock" },
+  { ticker: "BABA", name: "Alibaba ADR", shares: 30, avgCost: 72.0, weight: 6.2, sector: "China Tech", country: "China", assetType: "Stock" },
+  { ticker: "AVGO", name: "Broadcom", shares: 2, avgCost: 1400.0, weight: 4.5, sector: "Semiconductors", country: "US", assetType: "Stock" },
+  { ticker: "CANATU.HE", name: "Canatu Oyj", shares: 800, avgCost: 2.20, weight: 3.1, sector: "Semiconductors", country: "Finland", assetType: "Stock" },
+  { ticker: "DETEC.HE", name: "Detection Technology", shares: 120, avgCost: 14.50, weight: 3.1, sector: "Semiconductors", country: "Finland", assetType: "Stock" },
+  { ticker: "NVDA", name: "NVIDIA", shares: 1, avgCost: 150.0, weight: 3.1, sector: "Semiconductors", country: "US", assetType: "Stock" },
+  { ticker: "UNH", name: "UnitedHealth Group", shares: 4, avgCost: 480.0, weight: 3.0, sector: "Healthcare", country: "US", assetType: "Stock" },
+  { ticker: "CASH", name: "Cash / Saldo", shares: 1, avgCost: 1.0, weight: 3.0, sector: "Cash", country: "-", assetType: "Cash" as any },
+  { ticker: "QTCOM.HE", name: "Qt Group", shares: 30, avgCost: 52.0, weight: 2.7, sector: "AI / Software", country: "Finland", assetType: "Stock" },
+  { ticker: "UBER", name: "Uber", shares: 25, avgCost: 48.0, weight: 2.6, sector: "EV and Mobility", country: "US", assetType: "Stock" },
+  { ticker: "REG1V.HE", name: "Revenio Group", shares: 45, avgCost: 25.0, weight: 2.5, sector: "Healthcare", country: "Finland", assetType: "Stock" },
+  { ticker: "QTUM", name: "iShares Quantum Computing ETF", shares: 40, avgCost: 32.0, weight: 2.5, sector: "ETF", country: "US", assetType: "ETF" },
   { ticker: "IREN", name: "IREN", shares: 80, avgCost: 8.50, weight: 2.1, sector: "Crypto Exposure", country: "Australia", assetType: "Stock" },
-  { ticker: "AIFORIA", name: "Aiforia Technologies", shares: 400, avgCost: 1.80, weight: 1.2, sector: "Healthcare", country: "Finland", assetType: "Stock" },
-  { ticker: "EASOR", name: "Easor", shares: 500, avgCost: 0.65, weight: 0.9, sector: "Energy", country: "Finland", assetType: "Stock" },
+  { ticker: "TNOM.HE", name: "Talenom", shares: 150, avgCost: 5.50, weight: 2.0, sector: "AI / Software", country: "Finland", assetType: "Stock" },
+  { ticker: "AIFORIA.HE", name: "Aiforia Technologies", shares: 400, avgCost: 1.80, weight: 1.3, sector: "Healthcare", country: "Finland", assetType: "Stock" },
+  { ticker: "EASOR.HE", name: "Easor", shares: 500, avgCost: 0.65, weight: 1.0, sector: "Energy", country: "Finland", assetType: "Stock" },
 ];
 
 // All unique themes for filtering

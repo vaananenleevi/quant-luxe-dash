@@ -1,41 +1,38 @@
 import { useState } from "react";
 import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  CartesianGrid,
+  LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid,
 } from "recharts";
+import { useLiveQuote } from "@/hooks/use-live-quotes";
 
 const timeRanges = ["1D", "1W", "1M", "3M", "1Y", "5Y"] as const;
 
-const chartData = [
-  { date: "Jan", price: 142 },
-  { date: "Feb", price: 155 },
-  { date: "Mar", price: 148 },
-  { date: "Apr", price: 162 },
-  { date: "May", price: 171 },
-  { date: "Jun", price: 178 },
-  { date: "Jul", price: 185 },
-  { date: "Aug", price: 176 },
-  { date: "Sep", price: 182 },
-  { date: "Oct", price: 189 },
-  { date: "Nov", price: 194 },
-  { date: "Dec", price: 189 },
-];
+const generateChartData = (price: number) => {
+  const pts: { date: string; price: number }[] = [];
+  let p = price * 0.85;
+  const labels = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  for (const l of labels) {
+    p = p * (1 + (Math.random() - 0.42) * 0.04);
+    pts.push({ date: l, price: Math.round(p * 100) / 100 });
+  }
+  return pts;
+};
 
 const metrics = [
-  { label: "Market Cap", value: "$2.94T" },
-  { label: "P/E Ratio", value: "31.24" },
-  { label: "Revenue Growth", value: "+8.1%" },
-  { label: "Dividend Yield", value: "0.52%" },
-  { label: "R&D Intensity", value: "6.8%" },
+  { label: "Market Cap", value: "$3.67T" },
+  { label: "P/E Ratio", value: "33.8" },
+  { label: "Revenue Growth", value: "+4.9%" },
+  { label: "Dividend Yield", value: "0.44%" },
+  { label: "R&D Intensity", value: "7.2%" },
 ];
 
 export function FeaturedStock() {
   const [activeRange, setActiveRange] = useState<string>("1Y");
+  const { quote, fetchedAt } = useLiveQuote("AAPL");
+
+  const price = quote && quote.price > 0 ? quote.price : 248.96;
+  const changePct = quote && quote.price > 0 ? quote.changePercent : 0.54;
+  const up = changePct >= 0;
+  const chartData = generateChartData(price);
 
   return (
     <section className="bg-card rounded-lg border border-border p-6">
@@ -44,14 +41,20 @@ export function FeaturedStock() {
           <div className="flex items-center gap-3 mb-1">
             <h2 className="font-mono text-2xl font-bold text-foreground">AAPL</h2>
             <span className="text-sm font-sans text-muted-foreground">Apple Inc.</span>
+            {fetchedAt && (
+              <span className="text-[9px] font-mono text-positive bg-positive/10 px-1.5 py-0.5 rounded">
+                LIVE · {new Date(fetchedAt).toLocaleTimeString()}
+              </span>
+            )}
           </div>
           <div className="flex items-baseline gap-3">
-            <span className="font-mono text-3xl font-bold text-foreground">$189.84</span>
-            <span className="font-mono text-sm text-positive">+1.42% today</span>
+            <span className="font-mono text-3xl font-bold text-foreground">${price.toFixed(2)}</span>
+            <span className={`font-mono text-sm ${up ? "text-positive" : "text-negative"}`}>
+              {up ? "+" : ""}{changePct.toFixed(2)}% today
+            </span>
           </div>
         </div>
 
-        {/* Time range buttons */}
         <div className="flex gap-1 bg-secondary rounded-md p-1">
           {timeRanges.map((range) => (
             <button
@@ -69,7 +72,6 @@ export function FeaturedStock() {
         </div>
       </div>
 
-      {/* Chart */}
       <div className="h-64 mb-6">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={chartData}>
@@ -95,7 +97,7 @@ export function FeaturedStock() {
                 fontSize: "12px",
                 color: "hsl(216 14% 89%)",
               }}
-              formatter={(value: number) => [`$${value}`, "Price"]}
+              formatter={(value: number) => [`$${value.toFixed(2)}`, "Price"]}
             />
             <Line
               type="monotone"
@@ -109,7 +111,6 @@ export function FeaturedStock() {
         </ResponsiveContainer>
       </div>
 
-      {/* Metrics */}
       <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
         {metrics.map((m) => (
           <div key={m.label} className="group cursor-pointer">

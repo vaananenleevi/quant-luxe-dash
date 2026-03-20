@@ -10,6 +10,7 @@ import WatchlistPage from "./pages/WatchlistPage";
 import Comparison from "./pages/Comparison";
 import StockDetail from "./pages/StockDetail";
 import Markets from "./pages/Markets";
+import Calendar from "./pages/Calendar";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -28,6 +29,7 @@ const App = () => (
             <Route path="/comparison" element={<Comparison />} />
             <Route path="/stock/:ticker" element={<StockDetail />} />
             <Route path="/markets" element={<Markets />} />
+            <Route path="/calendar" element={<Calendar />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </DashboardLayout>
