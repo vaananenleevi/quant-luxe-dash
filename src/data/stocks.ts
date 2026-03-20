@@ -989,7 +989,7 @@ export const allStocks: StockData[] = [
     weeklyPercent: -2.5, ytdPercent: -8.5, yearPercent: -18.2,
   }),
   s({
-    ticker: "EASOR", name: "Easor Oy", price: 0.85, changePercent: 2.41,
+    ticker: "EASOR.HE", name: "Easor Oy", price: 0.85, changePercent: 2.41,
     marketCap: "$12M", sector: "Energy", theme: "Nordics / Finland",
     industry: "Geothermal Energy Tech", country: "Finland",
     pe: -1, forwardPe: -1, beta: 2.15,
