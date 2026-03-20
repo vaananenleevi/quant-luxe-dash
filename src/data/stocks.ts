@@ -1036,7 +1036,17 @@ export const portfolioETFs = [
   },
 ];
 
-export type AssetType = "Stock" | "ETF" | "Crypto Exposure" | "Cash";
+export interface PortfolioHolding {
+  ticker: string;
+  name: string;
+  shares: number;
+  avgCost: number;
+  weight: number;
+  sector: string;
+  country: string;
+  assetType: "Stock" | "ETF" | "Crypto Exposure" | "Cash";
+}
+
 
 export const portfolioHoldings: PortfolioHolding[] = [
   { ticker: "CSPX", name: "iShares Core S&P 500 UCITS ETF", shares: 12, avgCost: 520.0, weight: 10.1, sector: "ETF", country: "US", assetType: "ETF" },
