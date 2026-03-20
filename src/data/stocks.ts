@@ -847,7 +847,7 @@ export const allStocks: StockData[] = [
     sparkline: [15, 15.5, 16, 16.5, 17, 17.2, 17.5, 17.8, 18, 18.1, 18.3, 18.4]
   }),
   s({
-    ticker: "CANATU", name: "Canatu Oy", price: 2.85, changePercent: 2.89,
+    ticker: "CANATU.HE", name: "Canatu Oy", price: 2.85, changePercent: 2.89,
     marketCap: "$45M", sector: "Semiconductors", theme: "Nordics / Finland",
     industry: "Carbon Nanomaterials", country: "Finland",
     pe: -1, forwardPe: -1, revenueGrowth: 45.2, beta: 1.85,
