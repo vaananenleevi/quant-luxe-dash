@@ -970,7 +970,7 @@ export const allStocks: StockData[] = [
     weeklyPercent: 1.2, ytdPercent: 8.5, yearPercent: 22.5,
   }),
   s({
-    ticker: "AIFORIA", name: "Aiforia Technologies", price: 1.42, changePercent: -5.33,
+    ticker: "AIFORIA.HE", name: "Aiforia Technologies", price: 1.42, changePercent: -5.33,
     marketCap: "$28M", sector: "Healthcare", theme: "Nordics / Finland",
     industry: "AI Pathology", country: "Finland",
     pe: -1, forwardPe: -1, revenueGrowth: 32.5, beta: 1.95,
