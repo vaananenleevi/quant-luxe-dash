@@ -21,9 +21,8 @@ const navItems = [
   { icon: Briefcase, label: "Portfolio", path: "/portfolio" },
   { icon: Star, label: "Watchlist", path: "/watchlist" },
   { icon: GitCompare, label: "Comparison", path: "/comparison" },
+  { icon: CalendarDays, label: "Calendar", path: "/calendar" },
   { icon: BarChart3, label: "Stocks", path: "/stock/NVDA" },
-  { icon: Newspaper, label: "News", path: "/#news" },
-  { icon: Settings, label: "Settings", path: "/#settings" },
 ];
 
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
