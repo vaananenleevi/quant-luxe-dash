@@ -2,6 +2,8 @@ import { useMemo } from "react";
 import { portfolioHoldings } from "@/data/stocks";
 import { useLiveQuotes } from "@/hooks/use-live-quotes";
 
+const TOTAL_PORTFOLIO_EUR = 24_181;
+
 export function PortfolioOverview() {
   const tickers = useMemo(() => portfolioHoldings.filter(h => h.ticker !== "CASH").map(h => h.ticker), []);
   const { data: liveData } = useLiveQuotes(tickers);
@@ -9,8 +11,9 @@ export function PortfolioOverview() {
   const holdings = useMemo(() => {
     return portfolioHoldings.map(h => {
       const live = liveData?.quotes?.[h.ticker];
-      const changePct = live && live.price > 0 ? live.changePercent : 0;
-      return { ...h, changePercent: changePct };
+      const changePct = live && live.price > 0 ? live.changePercent : null;
+      const positionValue = TOTAL_PORTFOLIO_EUR * (h.weight / 100);
+      return { ...h, changePercent: changePct, positionValue };
     });
   }, [liveData]);
 
@@ -27,14 +30,18 @@ export function PortfolioOverview() {
     "bg-[hsl(162_67%_48%)]", "bg-[hsl(320_65%_55%)]",
   ];
 
-  // Daily movers
+  // Daily movers – only show if we have live data
+  const hasLiveData = holdings.some(h => h.changePercent !== null && h.ticker !== "CASH");
   const movers = holdings
-    .filter(h => h.ticker !== "CASH")
-    .sort((a, b) => b.changePercent - a.changePercent);
-  const gainers = movers.filter(m => m.changePercent > 0).slice(0, 3);
-  const losers = movers.filter(m => m.changePercent < 0).sort((a, b) => a.changePercent - b.changePercent).slice(0, 3);
+    .filter(h => h.ticker !== "CASH" && h.changePercent !== null)
+    .sort((a, b) => (b.changePercent ?? 0) - (a.changePercent ?? 0));
+  const gainers = movers.filter(m => (m.changePercent ?? 0) > 0).slice(0, 3);
+  const losers = movers.filter(m => (m.changePercent ?? 0) < 0).sort((a, b) => (a.changePercent ?? 0) - (b.changePercent ?? 0)).slice(0, 3);
 
-  const dailyChange = holdings.reduce((s, h) => s + h.weight * (h.changePercent / 100), 0);
+  // Weighted daily change – show "--" if no live data
+  const dailyChange = hasLiveData
+    ? holdings.reduce((s, h) => s + h.weight * ((h.changePercent ?? 0) / 100), 0)
+    : null;
 
   return (
     <section className="bg-card rounded-lg border border-border p-6">
@@ -47,20 +54,26 @@ export function PortfolioOverview() {
         )}
       </div>
 
-      <div className="grid grid-cols-3 gap-6 mb-6">
+      <div className="grid grid-cols-4 gap-6 mb-6">
+        <div>
+          <div className="text-xs font-sans text-muted-foreground mb-1">Total Value</div>
+          <div className="font-mono text-xl font-bold text-foreground">
+            €{TOTAL_PORTFOLIO_EUR.toLocaleString()}
+          </div>
+        </div>
         <div>
           <div className="text-xs font-sans text-muted-foreground mb-1">Holdings</div>
           <div className="font-mono text-xl font-bold text-foreground">{holdings.length}</div>
         </div>
         <div>
           <div className="text-xs font-sans text-muted-foreground mb-1">Daily Δ (weighted)</div>
-          <div className={`font-mono text-xl font-bold ${dailyChange >= 0 ? "text-positive" : "text-negative"}`}>
-            {dailyChange >= 0 ? "+" : ""}{dailyChange.toFixed(2)}%
+          <div className={`font-mono text-xl font-bold ${dailyChange === null ? "text-muted-foreground" : dailyChange >= 0 ? "text-positive" : "text-negative"}`}>
+            {dailyChange === null ? "--" : `${dailyChange >= 0 ? "+" : ""}${dailyChange.toFixed(2)}%`}
           </div>
         </div>
         <div>
-          <div className="text-xs font-sans text-muted-foreground mb-1">Cash</div>
-          <div className="font-mono text-xl font-bold text-foreground">3.0%</div>
+          <div className="text-xs font-sans text-muted-foreground mb-1">Total Return</div>
+          <div className="font-mono text-xl font-bold text-muted-foreground">--</div>
         </div>
       </div>
 
@@ -87,25 +100,38 @@ export function PortfolioOverview() {
         </div>
       </div>
 
+      {/* Holdings with EUR values */}
+      <div className="mt-6 mb-4">
+        <div className="text-xs font-sans text-muted-foreground mb-2 uppercase tracking-wider">Position Values</div>
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+          {holdings.filter(h => h.ticker !== "CASH").slice(0, 9).map(h => (
+            <div key={h.ticker} className="flex justify-between py-1">
+              <span className="font-mono text-xs text-foreground">{h.ticker}</span>
+              <span className="font-mono text-xs text-muted-foreground">€{Math.round(h.positionValue).toLocaleString()}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
       {/* Gainers / Losers */}
-      <div className="grid grid-cols-2 gap-4 mt-6">
+      <div className="grid grid-cols-2 gap-4 mt-4">
         <div>
           <div className="text-xs font-sans text-muted-foreground mb-2 uppercase tracking-wider">Top Gainers</div>
-          {gainers.length === 0 && <p className="text-xs text-muted-foreground">No gainers today</p>}
+          {!hasLiveData && <p className="text-xs text-muted-foreground">Waiting for live data...</p>}
           {gainers.map(m => (
             <div key={m.ticker} className="flex justify-between py-1.5">
               <span className="font-mono text-sm text-foreground">{m.ticker}</span>
-              <span className="font-mono text-sm text-positive">+{m.changePercent.toFixed(2)}%</span>
+              <span className="font-mono text-sm text-positive">+{(m.changePercent ?? 0).toFixed(2)}%</span>
             </div>
           ))}
         </div>
         <div>
           <div className="text-xs font-sans text-muted-foreground mb-2 uppercase tracking-wider">Top Losers</div>
-          {losers.length === 0 && <p className="text-xs text-muted-foreground">No losers today</p>}
+          {!hasLiveData && <p className="text-xs text-muted-foreground">Waiting for live data...</p>}
           {losers.map(m => (
             <div key={m.ticker} className="flex justify-between py-1.5">
               <span className="font-mono text-sm text-foreground">{m.ticker}</span>
-              <span className="font-mono text-sm text-negative">{m.changePercent.toFixed(2)}%</span>
+              <span className="font-mono text-sm text-negative">{(m.changePercent ?? 0).toFixed(2)}%</span>
             </div>
           ))}
         </div>
