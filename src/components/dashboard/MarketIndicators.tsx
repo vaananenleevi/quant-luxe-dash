@@ -1,12 +1,14 @@
 import { TrendingUp, TrendingDown } from "lucide-react";
 import { useLiveQuotes } from "@/hooks/use-live-quotes";
 
+// Each indicator maps to a Finnhub-compatible symbol.
+// displayMultiplier converts ETF share price → approximate index value where needed.
 const indicatorDefs = [
-  { name: "S&P 500", ticker: "SPY", fallbackValue: "5,234.18", fallbackChange: "+1.23%" },
-  { name: "Nasdaq", ticker: "QQQ", fallbackValue: "16,742.39", fallbackChange: "+1.67%" },
-  { name: "Dow Jones", ticker: "DIA", fallbackValue: "39,512.84", fallbackChange: "+0.56%" },
-  { name: "Bitcoin", ticker: "IBIT", fallbackValue: "68,542", fallbackChange: "+2.45%" },
-  { name: "Gold", ticker: "GLD", fallbackValue: "178.50", fallbackChange: "+0.42%" },
+  { name: "S&P 500", ticker: "SPY", displayMultiplier: 10, prefix: "", fallbackValue: "5,580", fallbackChange: "+0.45%" },
+  { name: "Nasdaq", ticker: "QQQ", displayMultiplier: 30, prefix: "", fallbackValue: "17,400", fallbackChange: "+0.62%" },
+  { name: "Dow Jones", ticker: "DIA", displayMultiplier: 100, prefix: "", fallbackValue: "41,500", fallbackChange: "+0.33%" },
+  { name: "Bitcoin", ticker: "BINANCE:BTCUSDT", displayMultiplier: 1, prefix: "$", fallbackValue: "70,000", fallbackChange: "+1.2%" },
+  { name: "Gold", ticker: "OANDA:XAU_USD", displayMultiplier: 1, prefix: "$", fallbackValue: "3,050", fallbackChange: "+0.3%" },
 ];
 
 export function MarketIndicators() {
@@ -28,10 +30,14 @@ export function MarketIndicators() {
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
         {indicatorDefs.map((ind, i) => {
           const live = liveData?.quotes?.[ind.ticker];
-          const price = live && live.price > 0 ? live.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : ind.fallbackValue;
-          const changePct = live && live.price > 0 ? live.changePercent : parseFloat(ind.fallbackChange);
+          const hasLive = live && live.price > 0;
+          const rawPrice = hasLive ? live.price * ind.displayMultiplier : null;
+          const price = rawPrice
+            ? rawPrice.toLocaleString(undefined, { minimumFractionDigits: rawPrice > 1000 ? 0 : 2, maximumFractionDigits: rawPrice > 1000 ? 0 : 2 })
+            : ind.fallbackValue;
+          const changePct = hasLive ? live.changePercent : parseFloat(ind.fallbackChange);
           const up = changePct >= 0;
-          const changeStr = live && live.price > 0 ? `${up ? "+" : ""}${changePct.toFixed(2)}%` : ind.fallbackChange;
+          const changeStr = hasLive ? `${up ? "+" : ""}${changePct.toFixed(2)}%` : ind.fallbackChange;
 
           return (
             <div
@@ -47,7 +53,9 @@ export function MarketIndicators() {
                   <TrendingDown className="h-3.5 w-3.5 text-negative" />
                 )}
               </div>
-              <div className="font-mono text-lg font-semibold text-foreground">${price}</div>
+              <div className="font-mono text-lg font-semibold text-foreground">
+                {ind.prefix}{price}
+              </div>
               <div
                 className={`font-mono text-sm mt-1 ${up ? "text-positive" : "text-negative"}`}
               >
