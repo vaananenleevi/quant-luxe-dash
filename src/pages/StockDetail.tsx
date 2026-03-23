@@ -77,21 +77,8 @@ export default function StockDetail() {
 
   const stock = getStockByTicker(ticker || "");
 
-  if (!stock) {
-    return (
-      <div className="space-y-4">
-        <Link to="/watchlist" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
-          <ArrowLeft className="h-4 w-4" /> Back to Watchlist
-        </Link>
-        <div className="bg-card rounded-lg border border-border p-12 text-center">
-          <p className="text-muted-foreground font-sans">Stock not found: {ticker}</p>
-        </div>
-      </div>
-    );
-  }
-
-  const displayPrice = liveQuote && liveQuote.price > 0 ? liveQuote.price : stock.price;
-  const displayChange = liveQuote && liveQuote.price > 0 ? liveQuote.changePercent : stock.changePercent;
+  const displayPrice = liveQuote && liveQuote.price > 0 ? liveQuote.price : (stock?.price ?? 0);
+  const displayChange = liveQuote && liveQuote.price > 0 ? liveQuote.changePercent : (stock?.changePercent ?? 0);
 
   const rawPriceData = useMemo(() => generatePriceData(displayPrice, activeRange), [displayPrice, activeRange]);
 
