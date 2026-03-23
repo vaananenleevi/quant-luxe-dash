@@ -8,7 +8,7 @@ import { ArrowLeft, Building2, Users, MapPin, Globe, TrendingUp, TrendingDown, A
 import { getStockByTicker } from "@/data/stocks";
 import { useLiveQuote } from "@/hooks/use-live-quotes";
 import { MetricTooltip } from "@/components/MetricTooltip";
-import { computeStockScore, metricDefinitions } from "@/lib/metrics";
+import { computeStockScore } from "@/lib/metrics";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const timeRanges = ["1D", "1W", "1M", "3M", "1Y", "5Y"] as const;
