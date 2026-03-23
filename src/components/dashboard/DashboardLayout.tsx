@@ -13,7 +13,10 @@ import {
   User,
   ChevronLeft,
   ChevronRight,
+  Sun,
+  Moon,
 } from "lucide-react";
+import { useTheme } from "@/hooks/use-theme";
 
 const navItems = [
   { icon: LayoutDashboard, label: "Dashboard", path: "/" },
@@ -28,6 +31,7 @@ const navItems = [
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [collapsed, setCollapsed] = useState(false);
   const location = useLocation();
+  const { theme, toggle } = useTheme();
 
   const isActive = (path: string) => {
     if (path === "/") return location.pathname === "/";
@@ -76,12 +80,23 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
           })}
         </nav>
 
-        <button
-          onClick={() => setCollapsed(!collapsed)}
-          className="h-12 flex items-center justify-center border-t border-border text-muted-foreground hover:text-foreground transition-colors"
-        >
-          {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
-        </button>
+        {/* Theme toggle + collapse */}
+        <div className="border-t border-border">
+          <button
+            onClick={toggle}
+            className="w-full h-10 flex items-center justify-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+            title={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+          >
+            {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            {!collapsed && <span className="text-xs font-sans">{theme === "dark" ? "Light mode" : "Dark mode"}</span>}
+          </button>
+          <button
+            onClick={() => setCollapsed(!collapsed)}
+            className="w-full h-10 flex items-center justify-center border-t border-border text-muted-foreground hover:text-foreground transition-colors"
+          >
+            {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
+          </button>
+        </div>
       </aside>
 
       {/* Main area */}
