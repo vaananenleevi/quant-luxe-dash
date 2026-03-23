@@ -68,7 +68,7 @@ export default function Comparison() {
     return list;
   }, [selected, sortMetric, sortDir]);
 
-  const toggleStock = (ticker: string) => {
+  const addOrRemoveStock = (ticker: string) => {
     setSelected(prev => prev.includes(ticker) ? prev.filter(t => t !== ticker) : [...prev, ticker]);
   };
 

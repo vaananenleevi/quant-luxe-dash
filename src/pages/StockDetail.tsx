@@ -113,10 +113,22 @@ export default function StockDetail() {
     : 0;
 
   const revenueData = generateRevenueData();
-  const marginData = generateMarginData();
 
   // Investment insight scores
-  const scores = useMemo(() => computeStockScore(stock), [stock]);
+  const scores = useMemo(() => stock ? computeStockScore(stock) : { growth: 0, profitability: 0, valuation: 0, overall: 0, conclusion: "", strengths: [], risks: [] }, [stock]);
+
+  if (!stock) {
+    return (
+      <div className="space-y-4">
+        <Link to="/watchlist" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
+          <ArrowLeft className="h-4 w-4" /> Back to Watchlist
+        </Link>
+        <div className="bg-card rounded-lg border border-border p-12 text-center">
+          <p className="text-muted-foreground font-sans">Stock not found: {ticker}</p>
+        </div>
+      </div>
+    );
+  }
 
   const financialMetrics = [
     { key: "revenue", label: "Revenue", value: stock.revenue },
